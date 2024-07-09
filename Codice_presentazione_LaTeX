@@ -178,4 +178,88 @@
     
 \end{frame}
 
+\begin{frame}
+\frametitle{Un altro indice: SAVI (Soil Adjust Vegetation Index)}
+\begin{columns}
+    \begin{column}{0.5\textwidth}
+        \begin{itemize}
+            \item Sviluppato per apportare una correzione al tradizionale indice NDVI
+            \item Trasformazione che minimizza le influenze della luminosità del suolo
+            \item Potenziale nella nostra area di interesse dal momento che la zona presenta molte aree di suolo nudo dovute alle precedenti eruzioni
+        \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+        \begin{center}
+        \includegraphics[width=0.7\textwidth]{SAVI_pre.png} % Sostituisci "SAVI_pre.jpg" con il nome effettivo del file dell'immagine
+        \includegraphics[width=0.7\textwidth]{SAVI_POST.png} % Sostituisci "SAVI_post.jpg" con il nome effettivo del file dell'immagine
+        \end{center}
+    \end{column}
+\end{columns}
+\vspace{0.3cm} 
+\begin{center}
+
+\[
+\text{SAVI} = \left( \frac{\text{NIR} - \text{RED}}{\text{NIR} + \text{RED} + L} \right) \cdot (1 + L)
+\]
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Classificazione}
+\begin{columns}
+    \begin{column}{0.5\textwidth}
+        \begin{center}
+        \textbf{Pre}
+        \includegraphics[width=\textwidth]{class color pre.png} 
+        \end{center}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+        \begin{center}
+        \textbf{Post}
+        \includegraphics[width=\textwidth]{class color post.png} 
+        \end{center}
+    \end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}
+
+\frametitle{Classificazione non supervisionata}
+\begin{columns}
+    \begin{column}{0.5\textwidth}
+        \begin{itemize}
+            \item Il modello non supervisionato seleziona pixel casuali e li mette in comparazione tra loro secondo il livello di riflettanza nelle diverse bande. Questo fornisce l’informazione necessaria alla costruzione delle classi richieste all’algoritmo. 
+
+            \item A differenza della classificazione per traning sites questo tipo di classificazione richiede un intervento di interpretazione per capire cosa rappresenta la classe generata. 
+        \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+        \begin{center}
+        \includegraphics[width=\textwidth]{tab classi 1ù.png} 
+        \end{center}
+    \end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{Change detection}
+    \begin{itemize}
+        \item La somma della perdita di vegetazione coincide con l’incremento di suolo nudo dovuto alla colata lavica.
+        \item La differenza di -0.11 è probabilmente legata alla copertura nuvolosa nell’immagine post. 
+        \end{itemize}
+\begin{column}{0.5\textwidth}
+        \begin{center}
+        \includegraphics[width=\textwidth]{tab classi riassunt.png} 
+        \end{center}
+    \end{column}
+\begin{column}{0.5\textwidth}
+        \begin{center}
+        \includegraphics[width=\textwidth]{Rplot.png} 
+        \end{center}
+    \end{column}
+    
+\end{frame}
+
+
 \end{document}

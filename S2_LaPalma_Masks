@@ -1,0 +1,48 @@
+#### Set Working directory #### 
+
+setwd("C:/Users/chicc/OneDrive/Desktop/Cumbre_Vieja")
+
+#### Carico i pacchetti ####
+library(terra)
+library(raster)
+library(imageRy)
+library(viridis)
+
+
+# indico la mia directory #
+setwd("C:/Users/chicc/OneDrive/Desktop/Cumbre_Vieja/S2_BANDS_NDVI_COMPARISON")
+
+# carico le due immagini NDVI precedentemente create rispettivamente del pre e post eruzione #
+ndvi_pre <- rast("C:/Users/chicc/OneDrive/Desktop/Cumbre_Vieja/S2_BANDS_NDVI_COMPARISON/NDVI_pre_ritaglio.tif")
+ndvi_post <- rast("C:/Users/chicc/OneDrive/Desktop/Cumbre_Vieja/S2_BANDS_NDVI_COMPARISON/NDVI_post_ritaglio.tif")
+plot(ndvi_pre)
+plot(ndvi_post)
+# creo uno stack per gestire i due indici NDVI pre e post come due bande di una immagine #
+NDVI_stack <- c(ndvi_pre, ndvi_post)
+
+# creo una maschera che mi filtra i pixcel che nel pre eruzione erano vegetazione (ovvero con valori maggiori di 0.25) e che nel post eruzione invece sono diventati suolo nudo (minore di 0.25)
+mask_new_soil <- (NDVI_stack[[1]] > 0.2) & (NDVI_stack[[2]] < 0.2)
+plot(mask_new_soil, main = "Mask Suolo")
+
+# quantifico i valori della mascherra appena ottenuti. 
+freq_new_soil <- freq(mask_new_soil) # 269067 pixel 
+# Attraverso l'utilizzo di un GIS caloclo l'area della mia ROI [REGCAN95 / UTM zone 28N EPSG:4083]
+
+tot_pix <- ncell(mask_new_soil) # 5668786 == 530.546 km^2
+print((269067*530.546)/5668786) # 25.182 km^2
+prop_soil <- freq_new_soil / tot_pix
+perc_new_soil <- prop_soil*100
+
+
+# creo una maschera per visualizzare le aree dove la vegetazione è passata da uno stato di alta vigoria a una codizione di bassa vigoria o assenza vegetativa dopo l'eruzione
+mask_damaged_veg_soil <- mask_damaged_veg <- (NDVI_stack[[1]] > 0.5) & (NDVI_stack[[2]] < 0.5)
+plot(mask_damaged_veg_soil, main = "Aree con vegetazione danneggiata")
+
+mask_damaged_veg <- (NDVI_stack[[1]] > 0.5) & (NDVI_stack[[2]] < 0.5 & NDVI_stack[[2]]>0.2)
+plot(mask_damaged_veg, main = "Aree con vegetazione danneggiata")
+freq_damaged_veg <- freq(mask_damaged_veg) # 361480 pixel 
+print((361480*530.546)/5668786) # 33.83119 km ^2
+
+writeRaster(mask_new_soil,"C:/Users/chicc/OneDrive/Desktop/Cumbre_Vieja/S2_BANDS_NDVI_COMPARISON/maschera_veg_soil.tif" , filetype="GTiff", overwrite=TRUE)
+writeRaster(mask_damaged_veg,"C:/Users/chicc/OneDrive/Desktop/Cumbre_Vieja/S2_BANDS_NDVI_COMPARISON/maschera_vegsalute_vegmoribonda.tif" , filetype="GTiff", overwrite=TRUE)
+

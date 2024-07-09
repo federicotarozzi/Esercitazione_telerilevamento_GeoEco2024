@@ -1,11 +1,12 @@
+# indico la mia directory #
+setwd("C:/Users/chicc/OneDrive/Desktop/Cumbre_Vieja/S2_BANDS_NDVI_COMPARISON")
+
 #### carico i pacchetti necessari all'analisi ####
 library(ggplot2)
 library(terra)
 library(imageRy)
 library(viridis)
 
-# indico la mia directory #
-setwd("C:/Users/chicc/OneDrive/Desktop/Cumbre_Vieja/S2_BANDS_NDVI_COMPARISON")
 
 # carico le due immagini NDVI precedentemente create rispettivamente del pre e post eruzione 
 # le immagini sono state ritagliate attraverso una elaborazione raster sul software QGIS in modo da apprezzare meglio la AOI (area of interest) ovvero la parte più a sud dell'isola
@@ -18,7 +19,6 @@ plot(ndvi_pre, col=magma(100))
 plot(ndvi_post, col=magma(100))
 
 #### CLASSIFICAZIONE DELLE IMMAIGNI ####
-
 
 pre_c <- im.classify(ndvi_pre, num_clusters=4) # necessarie 5 classi perchè il mare appare diviso in due classi diverse che poi andrò a sommare in un'unica classe post_c <- im.classify(ndvi_post, num_clusters=4)
 
@@ -87,14 +87,8 @@ data <- data.frame(
 # Creare il grafico con i valori sulle colonne
 ggplot(data, aes(x = Class, y = Value, fill = Time)) +
   geom_bar(stat = "identity", position = "dodge") +
-  geom_text(aes(label = paste0(Value, "%")), 
-            position = position_dodge(width = 0.9), 
-            vjust = -0.5, 
-            size = 3.5) +
-  labs(title = "Impatto dell'eruzione del vulcano Cumbre Vieja sulla vegetazione",
-       x = "Classificazione",
-       y = "Valore (%)",
-       fill = "Tempo") +
+  geom_text(aes(label = paste0(Value, "%")), position = position_dodge(width = 0.9), vjust = -0.5, size = 3.5) +
+  labs(title = "Impatto dell'eruzione del vulcano Cumbre Vieja sulla vegetazione", x = "Classificazione", y = "Valore (%)", fill = "Tempo") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
@@ -119,14 +113,10 @@ valore_suolo_nudo <- variazione[class == "Suolo nudo"]
 variazione_approssimata <- -sum_vegetazione  # la somma delle vegetazioni è approssimativamente uguale al suolo nudo ma in negativo
 
 # Creare una tabella con le variazioni
-data_variazione <- data.frame(
-  Class = class,
-  Variazione = variazione
-)
+data_variazione <- data.frame(Class = class, Variazione = variazione)
 
 # Aggiungere la nuova riga alla tabella
-nuova_riga <- data.frame(Class = "Somma vegetazione approssimata",
-                         Variazione = variazione_approssimata)
+nuova_riga <- data.frame(Class = "Somma vegetazione approssimata", Variazione = variazione_approssimata)
 data_variazione <- rbind(data_variazione, nuova_riga)
 
 # Stampare la tabella

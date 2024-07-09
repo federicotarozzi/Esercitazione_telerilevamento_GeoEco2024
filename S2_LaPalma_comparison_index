@@ -141,3 +141,4 @@ plot(savi_pre, col=plasma(100))
 
 savi_post <-((1+L)*(b8_post-b2_post)/(b8_post+b2_post+L))
 plot(savi_post, col=plasma(100))
+

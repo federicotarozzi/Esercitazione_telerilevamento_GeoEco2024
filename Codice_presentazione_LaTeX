@@ -1,6 +1,9 @@
 \documentclass{beamer}
+
+\usetheme{Frankfurt}
 \usecolortheme{beaver}
 \usepackage{xmpmulti}
+\usepackage{graphicx}
 
 \title{Eruzione del vulcano Cumbre Vieja}
 \subtitle{Una analisi di change detection sull’impatto dell’eruzione del vulcano Cumbre Vieja tra settembre e dicembre 2021}
@@ -31,7 +34,7 @@
     \item Isola più a ovest dell’arcipelago 
     \item Eruzione da 19 settembre 2021 al 13 dicembre 2021
     \item Nel parco nazionale di Cumbre Vieja, nella dorsale vulcanica posta nella zona più meridionale dell’isola
-    \item Centinaia di scosse di terremoto hanno anticipato l’eruzione 
+    \item Più di 22'000 scosse di terremoto hanno anticipato l’eruzione 
     \item La colata lavica ha coperto una considerevole area di zona antropica, campi coltivati e vegetazione
 \end{itemize}
 \begin{center}
@@ -152,7 +155,7 @@
     \end{column}
 \end{columns}
 
-\vspace{1cm} % Aggiunge uno spazio verticale per distanziare la formula dalle immagini
+\vspace{1cm} 
 \begin{center}
 \[
 \text{NDVI} = \frac{\text{NIR} - \text{RED}}{\text{NIR} + \text{RED}}
@@ -260,6 +263,123 @@
     \end{column}
     
 \end{frame}
+
+\begin{frame}
+\frametitle{Individuare il cambiamento attraverso le maschere}
+    Confrontare gli indici NDVI nel pre e nel post eruzione in modo da evidenziare:
+
+\begin{itemize}
+    \item  L’impatto dell’eruzione nel generare suolo nudo coprendo aree verdi 
+    \item L’impatto dell’eruzione nel ridurre lo stato di vigoria della vegetazione nella zona più meridionale dell’isola 
+
+\end{itemize}
+
+\begin{center}
+\includegraphics[width=1\textwidth]{photo_2024-06-19_12-25-49.jpg}
+\end{center}
+
+\end{frame}
+
+
+\begin{frame}
+
+\frametitle{Maschera del suolo}
+\begin{columns}
+    \begin{column}{0.5\textwidth}
+        \begin{itemize}
+            \item La machera appresenta l’area dove la colata lavica (suolo nudo) ha coperto aree vegetative con indice NDVI maggiore di 0.2
+            \item L’area che rispetta le condizioni della formula ammonta a $\mathbf{25.182 \, km^2}$ 
+
+        \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+        \begin{center}
+        \includegraphics[width=1.2\textwidth]{mask suolo.png} 
+        \end{center}
+    \end{column}
+\end{columns}
+\vspace{0.4cm}
+\begin{center}
+\includegraphics[width=\textwidth]{formula_mask_suolo.png}
+\end{center}
+
+\end{frame}
+
+
+\begin{frame}
+
+\frametitle{Maschera della Vegetazione}
+\begin{columns}
+    \begin{column}{0.5\textwidth}
+        \begin{itemize}
+            \item La maschera appresenta l’area dove la la vegetazione ad alto stato di vigoria (Maggiore di 0.5) ha sofferto una perdita di vigoria a causa dell’Eruzione  (valore NDVI compreso tra 0.2 e 0.5)
+
+            \item L’area che rispetta le condizioni della formula ammonta a 
+ $\mathbf{33.83119 \, km^2}$ 
+
+        \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+        \begin{center}
+        \includegraphics[width=1.2\textwidth]{vetetaz peggioramento.png} 
+        \end{center}
+    \end{column}
+\end{columns}
+\vspace{0.4cm}
+\begin{center}
+\includegraphics[width=\textwidth]{formula_mask_veg.png}
+\end{center}
+
+\end{frame}
+
+\begin{frame}{Come utilizzare le informazioni ottenute?}
+    \begin{center}
+\includegraphics[width=\textwidth]{Coltivazioni sommerse dalla lava.png}
+\end{center}
+\end{frame}
+
+
+
+\section{Conclusione}
+\begin{frame}{Conclusioni in generale}
+  \begin{itemize}
+    \item Fare analisi su immagini satellitari ci permette di quantificare il cambiamento (foto interpretazione, classificazioni, maschere).
+    \item Gli indici sono essenziali per valutare specifiche caratteristiche di una immagine o per valutare il cambiamento. 
+    \item Integrare i dati rappresenta una grande opportunità di creare valore aggiunto a una analisi.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Conclusioni nello specifico del caso di studio}
+  \begin{itemize}
+    \item L'eruzione ha avuto un forte impatto sulla vegetazione dell'isola: 
+    \begin{table}[h!]
+\centering
+\resizebox{\textwidth}{!}{
+\begin{tabular}{|c|c|}
+\hline
+\textbf{Area con vegetazione distrutta} & \textbf{Area con vegetazione danneggiata} \\
+\hline
+\textbf{25.182 km\(^2\)} & \textbf{33.83119 km\(^2\)} \\
+\hline
+\end{tabular}
+}
+\caption{Dati delle aree con vegetazione distrutta e danneggiata}
+\label{tab:vegetazione}
+\end{table}
+
+    
+    \item integrando dati di uso del suolo è stato possibile andare a define quali coltivazioni sono state distrutte a causa dell'eruzione.  
+  \end{itemize}
+  
+
+\end{frame}
+
+\begin{frame}{Come proseguire?}
+    \begin{center}
+\includegraphics[width=\textwidth]{come proseguire.png} 
+\end{center}
+\end{frame}
+
 
 
 \end{document}

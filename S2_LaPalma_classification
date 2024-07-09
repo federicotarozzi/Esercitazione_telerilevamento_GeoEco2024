@@ -1,0 +1,143 @@
+#### carico i pacchetti necessari all'analisi ####
+library(ggplot2)
+library(terra)
+library(imageRy)
+library(viridis)
+
+# indico la mia directory #
+setwd("C:/Users/chicc/OneDrive/Desktop/Cumbre_Vieja/S2_BANDS_NDVI_COMPARISON")
+
+# carico le due immagini NDVI precedentemente create rispettivamente del pre e post eruzione 
+# le immagini sono state ritagliate attraverso una elaborazione raster sul software QGIS in modo da apprezzare meglio la AOI (area of interest) ovvero la parte più a sud dell'isola
+ndvi_pre <- rast("C:/Users/chicc/OneDrive/Desktop/Cumbre_Vieja/S2_BANDS_NDVI_COMPARISON/NDVI_pre_ritaglio.tif")
+ndvi_post <- rast("C:/Users/chicc/OneDrive/Desktop/Cumbre_Vieja/S2_BANDS_NDVI_COMPARISON/NDVI_post_ritaglio.tif")
+
+# visualizziamo le immagini in modo da apprezzare l'impatto dell'eruzione sulla copertura e lo stato dei salute della vegetazione 
+
+plot(ndvi_pre, col=magma(100))
+plot(ndvi_post, col=magma(100))
+
+#### CLASSIFICAZIONE DELLE IMMAIGNI ####
+
+
+pre_c <- im.classify(ndvi_pre, num_clusters=4) # necessarie 5 classi perchè il mare appare diviso in due classi diverse che poi andrò a sommare in un'unica classe post_c <- im.classify(ndvi_post, num_clusters=4)
+
+# creo una palette di colori adeguata alla visualizzazione delle 4 classi che intendo realizzare
+
+col_classi <- colorRampPalette(c("darkgreen", "lightgreen", "black", "lightblue", "blue")) (100)
+
+plot(pre_c, col=col_classi)
+plot(post_c, col = col_classi)
+
+
+
+#### CALCOLO FREQUENZE PER IMMAGINE PRE ERUZIONE ####
+# calcolare le frequenze ragionando sul numero di pixel per ogni classe risultante dal processo di calssificazione 
+
+fpre <- freq(pre_c)  # Suolo) 349737 -- Acqua) 2812283 -- Vegetazione in salute ) 1643237 -- Vegetazione basso livello di salute ) 863529
+fpre
+
+
+# count rappresenta il numero di pixcel per la classe 1 e 2 e 3 e 4
+# calcolare pixcel totali dell'immagine
+totpre <- ncell(pre_c) # totale pixel immagine 5668786
+
+# calcolare la proporzione: numero di pixcel di una classe / il totale dei pixcel
+prop_pre = fpre / totpre
+
+# percentuale
+perc_pre <- prop_pre * 100 # Suolo) 6.169522 % -- Acqua) 49.609969 % -- Vegetazione in salute ) 28.987459% -- Vegetazione basso livello di salute ) 15.233050%
+
+
+controllo1 <-  6.169522+49.609969+28.987459+15.233050
+print(controllo1) # è corretto il risultato è 100 
+
+
+#### CALCOLO FREQUENZE PER IMMAGINE POST ERUZIONE ####
+
+# faccio lo stesso procedimento anche per l'immagine del post eruzione
+fpost <- freq(post_c)  # Suolo) 587888 -- Acqua) 2816281 -- Vegetazione in salute ) 1442840 -- Vegetazione basso livello di salute ) 821777
+
+# count rappresenta il numero di pixcel per la classe 1 e 2 e 3
+
+# calcolare pixcel totali dell'immagine
+totpost <- ncell(post_c)  # totale pixel immagine 5668786
+
+# calcolare la proporzione: numero di pixcel di una classe / il totale dei pixcel
+prop_post = fpost/ totpost
+
+# percentuale
+perc_post <- prop_post * 100  # Suolo) 10.37062 % -- Acqua) 49.68050 % -- Vegetazione alto livello di salute ) 25.45236 % -- Vegetazione basso livello di salute ) 14.49653 %
+
+
+
+#### COSTRUISCO UN DATAFRAME ####
+# riassumo i valori ottenuti relativamente alla copertura di Acqua, Suolo nudo e Vegetazione pre e post eruzione
+
+class <- c("Suolo nudo","Acqua","Vegetazione alto livello di salute", "Vegetazione basso livello di salute")
+ypre <- c(6.17, 49.61, 28.98, 15.23)
+ypost <- c(10.37, 49.68, 25.45, 14.49)
+
+data <- data.frame(
+  Class = rep(class, 2),
+  Value = c(ypre, ypost),
+  Time = rep(c("Pre-eruzione", "Post-eruzione"), each = length(class))
+)
+
+# Creare il grafico con i valori sulle colonne
+ggplot(data, aes(x = Class, y = Value, fill = Time)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  geom_text(aes(label = paste0(Value, "%")), 
+            position = position_dodge(width = 0.9), 
+            vjust = -0.5, 
+            size = 3.5) +
+  labs(title = "Impatto dell'eruzione del vulcano Cumbre Vieja sulla vegetazione",
+       x = "Classificazione",
+       y = "Valore (%)",
+       fill = "Tempo") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+
+#### CREARE UN DATAFRAME CHE RIASSUME I DATI OTTENUTI ####
+# Preparare i dati
+class <- c("Suolo nudo","Acqua","Vegetazione alto livello di salute", "Vegetazione basso livello di salute")
+ypre <- c(6.94, 49.79, 27.84, 15.41)
+ypost <- c(10.37, 49.68, 25.45, 14.49)
+
+# Calcolare la variazione per ciascuna classe
+variazione <- ypost - ypre
+
+# Calcolare la somma delle variazioni per le classi di vegetazione
+sum_vegetazione <- sum(variazione[class %in% c("Vegetazione alto livello di salute", "Vegetazione basso livello di salute")])
+
+# Calcolare il valore del suolo nudo
+valore_suolo_nudo <- variazione[class == "Suolo nudo"]
+
+# Calcolare la variazione approssimata
+variazione_approssimata <- -sum_vegetazione  # la somma delle vegetazioni è approssimativamente uguale al suolo nudo ma in negativo
+
+# Creare una tabella con le variazioni
+data_variazione <- data.frame(
+  Class = class,
+  Variazione = variazione
+)
+
+# Aggiungere la nuova riga alla tabella
+nuova_riga <- data.frame(Class = "Somma vegetazione approssimata",
+                         Variazione = variazione_approssimata)
+data_variazione <- rbind(data_variazione, nuova_riga)
+
+# Stampare la tabella
+print(data_variazione)
+
+# creo un dataframe contenente la tabella in output reassuntiva delle variazioni osservate. 
+data <- data.frame(data_variazione)
+# constatiamo che: 
+# la quantità di suolo nudo è aumentato di un valore che è pari alla riduzione del valore delle diverse classi di vegetazioni tra le due immagini
+# il valore dell'accqua cambia di un -0.11 probabilmente per l'impatto della copertura nuvolosa nella seconda immagine. 
+
+
+writeRaster(pre_c,"C:/Users/chicc/OneDrive/Desktop/Cumbre_Vieja/S2_BANDS_NDVI_COMPARISON/classificazione_pre.tif" , filetype="GTiff", overwrite=TRUE)
+writeRaster(post_c,"C:/Users/chicc/OneDrive/Desktop/Cumbre_Vieja/S2_BANDS_NDVI_COMPARISON/classificazione_post.tif" , filetype="GTiff", overwrite=TRUE)

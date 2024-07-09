@@ -1,0 +1,181 @@
+\documentclass{beamer}
+\usecolortheme{beaver}
+\usepackage{xmpmulti}
+
+\title{Eruzione del vulcano Cumbre Vieja}
+\subtitle{Una analisi di change detection sull’impatto dell’eruzione del vulcano Cumbre Vieja tra settembre e dicembre 2021}
+\author{Federico Tarozzi}
+\date{10 Luglio 2021}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}
+\frametitle{Agenda}
+\begin{itemize}
+    \item Introduzione
+    \item Analisi e risultati
+    \item Applicazione
+    \item Conclusione
+\end{itemize}
+\transduration<0-12>{0}
+        \multiinclude[<+->][format=png, graphics={width=0.6\textwidth}]{something}
+\end{frame}
+
+\section{Introduzione}
+
+\begin{frame}
+\frametitle{L'eruzione del vulcano dell'isola di La Palma}
+\begin{itemize}
+    \item Isola più a ovest dell’arcipelago 
+    \item Eruzione da 19 settembre 2021 al 13 dicembre 2021
+    \item Nel parco nazionale di Cumbre Vieja, nella dorsale vulcanica posta nella zona più meridionale dell’isola
+    \item Centinaia di scosse di terremoto hanno anticipato l’eruzione 
+    \item La colata lavica ha coperto una considerevole area di zona antropica, campi coltivati e vegetazione
+\end{itemize}
+\begin{center}
+\includegraphics[width=0.6\textwidth]{skynews-la-palma-eruption_5520741.jpg}
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Il dato utilizzato}
+\begin{itemize}
+    \item  Immagini Sentinel-2A
+    \item Sensore multispettrale a 13 bande (visibile e infrarosso)
+    \item Risoluzione spaziale = 10m
+    \item Risoluzione radiometrica = 12 bit
+    \item Risoluzione temporale = tempo di rivisita circa 3 giorni
+    \item Il GeoTiff scaricato è stato ritagliato per avere maggiore focus sulla area di interesse (AOI)
+
+\end{itemize}
+\begin{center}
+\includegraphics[width=0.6\textwidth]{4 bande 10m.png}
+\end{center}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{}
+\begin{center}
+\includegraphics[width=\textwidth]{slide forma completa.png} 
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{}
+\begin{center}
+\includegraphics[width=\textwidth]{Immagine_eruzione_sar.png} 
+\end{center}
+\end{frame}
+
+
+\section{Analisi}
+
+\begin{frame}
+\frametitle{Analisi}
+
+\begin{itemize}
+    \item L’analisi è relativa alle immagini del pre eruzione (gennaio 2021) e del post eruzione (marzo 2022)
+    \item Individuazione degli indici NDVI – SAVI
+    \begin{itemize}
+        \item Come si calano 
+        \item Quale informazioni hanno
+    \end{itemize}
+    \item Classificazione non supervisionata
+    \begin{itemize}
+        \item Commentare valuti ottenuti quantificando il penso di ogni classe sul complessivo dell’immagine in percentuale 
+    \end{itemize}
+    \item Individuare il cambiamento creando delle maschere:
+    \begin{itemize}
+        \item Quantificare l’area in km2 di vegetazione coperta dalla colata
+        \item Quantificare l’area in km2 di vegetazione che è passata da un alto livello di vigoria (maggiore di 0.5) a un basso livello di vigoria (compreso tra 0.2 e 0.5)
+        \item Esempio uso del suolo: impatto sulla coltivazione (land use)
+    \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Le immagini utilizzate}
+\begin{columns}
+    \begin{column}{0.5\textwidth}
+        \begin{center}
+        \textbf{Pre}
+        \includegraphics[width=\textwidth]{RBG.png} 
+        \end{center}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+        \begin{center}
+        \textbf{Post}
+        \includegraphics[width=\textwidth]{RGB_post.png} 
+        \end{center}
+    \end{column}
+\end{columns}
+\end{frame}
+\begin{frame}
+\frametitle{Le immagini utilizzate}
+\begin{columns}
+    \begin{column}{0.5\textwidth}
+        \begin{center}
+        \textbf{Pre}
+        \includegraphics[width=\textwidth]{falso_pre.png} 
+        \end{center}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+        \begin{center}
+        \textbf{Post}
+        \includegraphics[width=\textwidth]{falso_post.png} 
+        \end{center}
+    \end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Calcolo dell'indice NDVI}
+\begin{columns}
+    \begin{column}{0.5\textwidth}
+        \begin{center}
+        \textbf{Pre}
+        \includegraphics[width=\textwidth]{NDVI_PRE_RIT.png} 
+        \end{center}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+        \begin{center}
+        \textbf{Post}
+        \includegraphics[width=\textwidth]{NDVI_POST_RIT.png} 
+        \end{center}
+    \end{column}
+\end{columns}
+
+\vspace{1cm} % Aggiunge uno spazio verticale per distanziare la formula dalle immagini
+\begin{center}
+\[
+\text{NDVI} = \frac{\text{NIR} - \text{RED}}{\text{NIR} + \text{RED}}
+\]
+\end{center}
+
+\end{frame}
+
+
+\begin{frame}{Come funziona l'indice NDVI}
+\begin{columns}
+    \begin{column}{0.5\textwidth}
+        \begin{center}
+        \includegraphics[width=\textwidth]{preche è importante l'NDVI.png} 
+        \end{center}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+        \begin{center}
+        \includegraphics[width=0.8\textwidth]{tab_NDVI.png} 
+        \end{center}
+    \end{column}
+\end{columns}
+    
+\end{frame}
+
+\end{document}

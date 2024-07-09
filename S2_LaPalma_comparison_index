@@ -1,0 +1,143 @@
+#### Set Working directory #### 
+
+setwd("C:/Users/chicc/OneDrive/Desktop/Cumbre_Vieja")
+
+#### Carico i pacchetti ####
+library(terra)
+library(raster)
+library(imageRy)
+library(viridis)
+
+#### Carico le Bande ####
+
+# Pre-eruzione - 1 Gennaio 2021 -
+
+b2_pre <- raster("C:/Users/chicc/OneDrive/Desktop/Cumbre_Vieja/S2_BANDS_NDVI_COMPARISON/20210128_B2.tif")
+b3_pre <- raster("C:/Users/chicc/OneDrive/Desktop/Cumbre_Vieja/S2_BANDS_NDVI_COMPARISON/20210128_B3.tif")
+b4_pre <- raster("C:/Users/chicc/OneDrive/Desktop/Cumbre_Vieja/S2_BANDS_NDVI_COMPARISON/20210128_B4.tif")
+b8_pre <- raster("C:/Users/chicc/OneDrive/Desktop/Cumbre_Vieja/S2_BANDS_NDVI_COMPARISON/20210128_B8.tif")
+
+#multiframe
+
+par(mfrow=c(2,2))
+
+plot(b2_pre)
+
+plot(b3_pre)
+
+plot(b4_pre)
+
+plot(b8_pre)
+
+dev.off()
+
+stacksent_pre <- stack(b2_pre, b3_pre, b4_pre, b8_pre)
+plot(stacksent_pre)
+
+
+# RGB
+
+# stacksent_pre[[1]] = b2 = red
+
+# stacksent_pre[[2]] = b3 = green
+
+# stacksent_pre[[3]] = b4 = blue
+
+# stacksent_pre[[4]] = b8 = nir
+
+
+nat_pre <- im.plotRGB(stacksent_pre, 3, 2, 1) # naturale RGB
+falso_pre <- im.plotRGB(stacksent_pre, 4, 3, 2) # falso colore, nir on red
+im.plotRGB(stacksent_pre, 2, 4, 1) # nir on green 
+im.plotRGB(stacksent_pre, 1, 2, 4) # nir on blue
+
+# esposto il raster falso colore 
+stack_falso_pre <- stack(b8_pre, b4_pre, b3_pre)
+writeRaster(stack_falso_pre,"C:/Users/chicc/OneDrive/Desktop/Cumbre_Vieja/S2_BANDS_NDVI_COMPARISON/falso_pre.tif" , filetype="GTiff", overwrite=TRUE)
+
+
+#### Calcolo NDVI per le bande relative al Pre-eruzione 
+
+# calcolo NDVI
+
+#ndvi_corn <- im.dvi(stacksent_rt, 4, 1)
+color <- colorRampPalette(c("darkblue","brown", "green", "darkgreen")) (100)
+
+# Calcolo il different vegetation index (DVI): riflettanza dell'infrarosso - la riflettanza del rosso = indice di vigoria della biomassa
+# l'infratrosso è in grado di riflettere il mesofillo fogliare dando indicazione sullo stato di salute della pianta.
+dvi_pre = stacksent_pre[[4]] - stacksent_pre[[1]]
+plot(dvi_pre, col=magma(100))
+# Calcolo NDVI --> indice normalizzato 
+ndvi_pre <- dvi_pre / (stacksent_pre[[4]] + stacksent_pre[[1]])
+plot(ndvi_pre, col=magma(100))
+
+# esporto l'NDVI per l'immagine pre
+writeRaster(ndvi_pre,"C:/Users/chicc/OneDrive/Desktop/Cumbre_Vieja/S2_BANDS_NDVI_COMPARISON/ndvi_pre.tif" , filetype="GTiff", overwrite=TRUE)
+
+# Post - Eruzione 1 Marzo 2022
+
+b2_post <- raster("C:/Users/chicc/OneDrive/Desktop/Cumbre_Vieja/S2_BANDS_NDVI_COMPARISON/20220103_B2.tif")
+b3_post <- raster("C:/Users/chicc/OneDrive/Desktop/Cumbre_Vieja/S2_BANDS_NDVI_COMPARISON/20220103_B3.tif")
+b4_post <- raster("C:/Users/chicc/OneDrive/Desktop/Cumbre_Vieja/S2_BANDS_NDVI_COMPARISON/20220103_B4.tif")
+b8_post <- raster("C:/Users/chicc/OneDrive/Desktop/Cumbre_Vieja/S2_BANDS_NDVI_COMPARISON/20220103_B8.tif")
+
+# Faccio uno stack delle bande
+stacksent_post <- stack(b2_post, b3_post, b4_post, b8_post)
+
+# Plot immmagine RGB (ture color) e Falso colore
+
+nat_post <- im.plotRGB(stacksent_post, 3, 2, 1) # naturale RGB
+falso_post <- im.plotRGB(stacksent_post, 4, 3, 2) # falso colore, nir on red
+# esposto il raster falso colore 
+stack_falso_post <- stack(b8_post, b4_post, b3_post)
+writeRaster(stack_falso_post,"C:/Users/chicc/OneDrive/Desktop/Cumbre_Vieja/S2_BANDS_NDVI_COMPARISON/falso_post.tif" , filetype="GTiff", overwrite=TRUE)
+
+# Calcolo come in precedenza gli indicatori DVI e NDVI per l'immagine post eruzione
+
+color <- colorRampPalette(c("darkblue", "yellow", "red", "black")) (100)
+
+#### Calcolo NDVI per le bande del post eruzione 
+
+
+dvi_post = stacksent_post[[4]] - stacksent_post[[1]]
+plot(dvi_post, col=magma(100))
+
+ 
+ndvi_post <- dvi_post / (stacksent_post[[4]] + stacksent_post[[1]])
+plot(ndvi_post, col=magma(100))
+
+# Esporto l'immagine NDVI post
+writeRaster(ndvi_post,"C:/Users/chicc/OneDrive/Desktop/Cumbre_Vieja/S2_BANDS_NDVI_COMPARISON/ndvi_post.tif" , filetype="GTiff", overwrite=TRUE)
+
+# visualizzazione delle due immagini NDVI ottenute
+par(mfrow=c(1,2))
+plot(ndvi_pre)
+plot(ndvi_post)
+dev.off()
+
+# Quantifico la differenza tra le due immagini 
+ndvi_diff <- ndvi_post - ndvi_pre
+plot(ndvi_diff, col=magma(100))
+dev.off()
+
+
+# Esporto l'immagine con la differenza tra i due valori NDVI pre e post
+writeRaster(ndvi_diff,"C:/Users/chicc/OneDrive/Desktop/Cumbre_Vieja/S2_BANDS_NDVI_COMPARISON/ndvi_diff.tif" , filetype="GTiff", overwrite=TRUE)
+
+
+
+#### calcolo indice SAVI ####
+
+# Calcolo l'indice SAVI [Soil-adjusted vegetation index] per le immagini del pre e del post eruzione 
+# tenativo di correggere l'instabilità dell'NDVI (variazione del colore al suolo, umidità del suolo, effetti di saturazione)
+# L'indice SAVI è una tecnica di trasformazione che minimizza le influenze della luminosità del suolo dagli indici spettrali della vegetazione che coinvolgono le lunghezze d'onda del rosso e del vicino infrarosso (NIR).
+
+L = 0.5 # correggere le variazioni di vegetazione indotte dal suolo. ridurre al minimo le variazioni di luminosità del suolo 
+
+savi_pre <-((1+L)*(b8_pre-b2_pre)/(b8_pre+b2_pre+L))
+plot(savi_pre, col=plasma(100))
+
+
+
+savi_post <-((1+L)*(b8_post-b2_post)/(b8_post+b2_post+L))
+plot(savi_post, col=plasma(100))

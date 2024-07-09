@@ -381,5 +381,18 @@
 \end{frame}
 
 
+\begin{frame}{Sitografia}
+https://github.com/federicotarozzi/
+Esercitazione_telerilevamento_GeoEco2024/tree/main
+
+
+\vspace{2cm} 
+
+\begin{itemize}
+    \item https://opendata.sitcan.es/
+    \item https://www.agricolus.com/indici-vegetazione-ndvi-ndmi-istruzioni-luso/
+    \item https://browser.dataspace.copernicus.eu/
+\end{itemize}
+\end{frame}
 
 \end{document}

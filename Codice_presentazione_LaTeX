@@ -198,7 +198,7 @@
         \end{center}
     \end{column}
 \end{columns}
-\vspace{0.3cm} 
+
 \begin{center}
 
 \[
@@ -321,7 +321,7 @@
     \end{column}
     \begin{column}{0.5\textwidth}
         \begin{center}
-        \includegraphics[width=1.2\textwidth]{vetetaz peggioramento.png} 
+        \includegraphics[width=1.2\textwidth]{veg dannegg.png} 
         \end{center}
     \end{column}
 \end{columns}
@@ -392,7 +392,10 @@ Esercitazione_telerilevamento_GeoEco2024/tree/main
     \item https://opendata.sitcan.es/
     \item https://www.agricolus.com/indici-vegetazione-ndvi-ndmi-istruzioni-luso/
     \item https://browser.dataspace.copernicus.eu/
+    \item https://datos.gob.es/es/catalogo/l03380010-cultivos
+    \item https://opentopography.org/
 \end{itemize}
 \end{frame}
 
 \end{document}
+

@@ -51,7 +51,7 @@ falso_pre <- im.plotRGB(stacksent_pre, 4, 3, 2) # falso colore, nir on red
 im.plotRGB(stacksent_pre, 2, 4, 1) # nir on green 
 im.plotRGB(stacksent_pre, 1, 2, 4) # nir on blue
 
-# esposto il raster falso colore 
+# esporto il raster falso colore 
 stack_falso_pre <- stack(b8_pre, b4_pre, b3_pre)
 writeRaster(stack_falso_pre,"C:/Users/chicc/OneDrive/Desktop/Cumbre_Vieja/S2_BANDS_NDVI_COMPARISON/falso_pre.tif" , filetype="GTiff", overwrite=TRUE)
 
@@ -60,7 +60,7 @@ writeRaster(stack_falso_pre,"C:/Users/chicc/OneDrive/Desktop/Cumbre_Vieja/S2_BAN
 
 # calcolo NDVI
 
-#ndvi_corn <- im.dvi(stacksent_rt, 4, 1)
+
 color <- colorRampPalette(c("darkblue","brown", "green", "darkgreen")) (100)
 
 # Calcolo il different vegetation index (DVI): riflettanza dell'infrarosso - la riflettanza del rosso = indice di vigoria della biomassa
@@ -88,13 +88,11 @@ stacksent_post <- stack(b2_post, b3_post, b4_post, b8_post)
 
 nat_post <- im.plotRGB(stacksent_post, 3, 2, 1) # naturale RGB
 falso_post <- im.plotRGB(stacksent_post, 4, 3, 2) # falso colore, nir on red
-# esposto il raster falso colore 
+# esporto il raster falso colore 
 stack_falso_post <- stack(b8_post, b4_post, b3_post)
 writeRaster(stack_falso_post,"C:/Users/chicc/OneDrive/Desktop/Cumbre_Vieja/S2_BANDS_NDVI_COMPARISON/falso_post.tif" , filetype="GTiff", overwrite=TRUE)
 
 # Calcolo come in precedenza gli indicatori DVI e NDVI per l'immagine post eruzione
-
-color <- colorRampPalette(c("darkblue", "yellow", "red", "black")) (100)
 
 #### Calcolo NDVI per le bande del post eruzione 
 
